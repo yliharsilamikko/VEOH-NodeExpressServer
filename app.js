@@ -25,7 +25,7 @@ app.post('/TEST', (req, res, next) => {
 
 
 app.get('/', (req, res, next) => {
-    res.send(`Hello world 2`);
+    res.send(`Hello world 3`);
 });
 
 app.use((req, res, next) => {
