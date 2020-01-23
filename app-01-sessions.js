@@ -38,9 +38,18 @@ app.get('/', is_logged_handler, (req, res, next) => {
     <html>
     <body>
         Logged in as user: ${user}
+        <form action="/logout" method="POST">
+            <button type="submit">Log out</button>
+        </form>
     </html>
     </body>
     `);
+    res.end();
+});
+
+app.post('/logout', (req, res, next) => {
+    req.session.destroy();
+    res.redirect('/login');
 });
 
 app.get('/login', (req, res, next) => {
@@ -70,10 +79,10 @@ app.post('/login', (req, res, next) => {
     if (user) {
         console.log('User logged in: ', user);
         req.session.user = user;
-        return res.redirect('/login');
+        return res.redirect('/');
     }
     console.log('User name not registered: ', user);
-    res.redirect('login');
+    res.redirect('/login');
 });
 
 app.post('/register', (req, res, next) => {
