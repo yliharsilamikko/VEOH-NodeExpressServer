@@ -97,15 +97,24 @@ app.post('/login', (req, res, next) => {
 
 app.post('/register', (req, res, next) => {
     const user_name = req.body.user_name;
-    let user = users.find((name) => {
-        return user_name == name;
+
+    user_model.findOne({
+        name: user_name
+    }).then((user) => {
+        if (user) {
+            console.log('User name already registered');
+            return res.redirect('/login');
+        }
+
+        let new_user = new user_model({
+            name: user_name
+        });
+
+        new_user.save().then(() => {
+            return res.redirect('/login');
+        });
+
     });
-    if (user) {
-        return res.send('User name already registered');
-    }
-    users.push(user_name);
-    console.log('users:', users);
-    res.redirect('/login');
 });
 
 app.use((req, res, next) => {
