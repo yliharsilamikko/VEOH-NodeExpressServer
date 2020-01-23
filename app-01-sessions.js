@@ -9,6 +9,15 @@ app.use(body_parser.urlencoded({
     extended: true
 }));
 
+app.use(session({
+    secret: '1234qwerty',
+    resave: true,
+    saveUninitialized: true,
+    cookie: {
+        maxAge: 1000000
+    }
+}));
+
 let users = [];
 
 app.use((req, res, next) => {
@@ -17,6 +26,7 @@ app.use((req, res, next) => {
 });
 
 app.get('/login', (req, res, next) => {
+    console.log('user: ', req.session.user)
     res.write(`
     <html>
     <body>
@@ -41,6 +51,8 @@ app.post('/login', (req, res, next) => {
     });
     if (user) {
         console.log('User logged in: ', user);
+        req.session.user = user;
+        return res.redirect('/login');
     }
     console.log('User name not registered: ', user);
     res.redirect('login');
