@@ -3,6 +3,15 @@ const PORT = process.env.PORT || 8080;
 const body_parser = require('body-parser');
 const session = require('express-session');
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+const user_schema = new Schema({
+    name: {
+        type: String,
+        required: true
+    }
+});
+const user_model = mongoose.model('user', user_schema);
 
 let app = express();
 
