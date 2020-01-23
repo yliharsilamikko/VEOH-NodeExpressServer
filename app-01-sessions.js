@@ -1,6 +1,7 @@
 const express = require('express');
 const PORT = process.env.PORT || 8080;
 const body_parser = require('body-parser');
+const session = require('express-session');
 
 let app = express();
 
@@ -34,7 +35,15 @@ app.get('/login', (req, res, next) => {
 });
 
 app.post('/login', (req, res, next) => {
-    console.log(req.body);
+    const user_name = req.body.user_name;
+    let user = users.find((name) => {
+        return user_name == name;
+    });
+    if (user) {
+        console.log('User logged in: ', user);
+    }
+    console.log('User name not registered: ', user);
+    res.redirect('login');
 });
 
 app.post('/register', (req, res, next) => {
