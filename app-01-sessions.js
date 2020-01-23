@@ -25,6 +25,9 @@ app.use((req, res, next) => {
     next();
 });
 
+
+
+
 app.get('/login', (req, res, next) => {
     console.log('user: ', req.session.user)
     res.write(`
