@@ -47,7 +47,7 @@ app.get('/', is_logged_handler, (req, res, next) => {
     res.write(`
     <html>
     <body>
-        Logged in as user: ${user}
+        Logged in as user: ${user.name}
         <form action="/logout" method="POST">
             <button type="submit">Log out</button>
         </form>
@@ -83,16 +83,16 @@ app.get('/login', (req, res, next) => {
 
 app.post('/login', (req, res, next) => {
     const user_name = req.body.user_name;
-    let user = users.find((name) => {
-        return user_name == name;
+    user_model.findOne({
+        name: user_name
+    }).then((user) => {
+        if (user) {
+            req.session.user = user;
+            return res.redirect('/');
+        }
+
+        res.redirect('/login');
     });
-    if (user) {
-        console.log('User logged in: ', user);
-        req.session.user = user;
-        return res.redirect('/');
-    }
-    console.log('User name not registered: ', user);
-    res.redirect('/login');
 });
 
 app.post('/register', (req, res, next) => {
