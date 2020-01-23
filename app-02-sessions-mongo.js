@@ -107,4 +107,14 @@ app.use((req, res, next) => {
 });
 
 //Shutdown server CTRL + C in terminal
-app.listen(PORT);
+
+const mongoose_url = '';
+
+mongoose.connect(mongoose_url, {
+    useUnifiedTopology: true,
+    useNewUrlParser: true
+}).then(() => {
+    console.log('Mongoose connected');
+    console.log('Start Express server');
+    app.listen(PORT);
+});
