@@ -25,8 +25,23 @@ app.use((req, res, next) => {
     next();
 });
 
+const is_logged_handler = (req, res, next) => {
+    if (!req.session.user) {
+        return res.redirect('/login');
+    }
+    next();
+};
 
-
+app.get('/', is_logged_handler, (req, res, next) => {
+    const user = req.session.user;
+    res.write(`
+    <html>
+    <body>
+        Logged in as user: ${user}
+    </html>
+    </body>
+    `);
+});
 
 app.get('/login', (req, res, next) => {
     console.log('user: ', req.session.user)
