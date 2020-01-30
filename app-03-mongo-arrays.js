@@ -167,7 +167,8 @@ app.post('/register', (req, res, next) => {
         }
 
         let new_user = new user_model({
-            name: user_name
+            name: user_name,
+            notes: []
         });
 
         new_user.save().then(() => {
