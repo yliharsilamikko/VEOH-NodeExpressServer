@@ -63,10 +63,13 @@ app.get('/', is_logged_handler, (req, res, next) => {
         .execPopulate()
         .then(() => {
             console.log('user:', user);
-            res.send(note_views.notes_view({
+            let data = {
                 user_name: user.name,
                 notes: user.notes
-            }));
+            };
+            let html = note_views.notes_view(data);
+            console.log('html:', html)
+            res.send();
         });
 });
 

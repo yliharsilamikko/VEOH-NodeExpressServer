@@ -26,7 +26,7 @@ const notes_view = ((data) => {
     </html>
     </body>
     `;
-
+    return html;
 });
 
 module.exports.notes_view = notes_view;
