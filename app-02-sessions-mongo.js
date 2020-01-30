@@ -42,8 +42,18 @@ const is_logged_handler = (req, res, next) => {
     next();
 };
 
+app.use((req, res, next) => {
+    if (!req.session.user) {
+        return next();
+    }
+    user_model.findById(req.session.user._id).then((user) => {
+        req.user = user;
+        next();
+    });
+});
+
 app.get('/', is_logged_handler, (req, res, next) => {
-    const user = req.session.user;
+    const user = req.user;
     res.write(`
     <html>
     <body>
