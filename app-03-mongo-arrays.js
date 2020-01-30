@@ -63,6 +63,9 @@ app.use((req, res, next) => {
     user_model.findById(req.session.user._id).then((user) => {
         req.user = user;
         next();
+    }).catch((err) => {
+        console.log(err);
+        res.redirect('login');
     });
 });
 
@@ -88,12 +91,17 @@ app.get('/', is_logged_handler, (req, res, next) => {
 });
 
 app.post('/add-note', (req, res, next) => {
+    const user = req.user;
+
     let new_note = note_model({
         text: req.body.note
     });
     new_note.save().then(() => {
         console.log('note saved');
-        return res.redirect('/');
+        user.notes.push(new_note);
+        user.save().then(() => {
+            return res.redirect('/');
+        });
     });
 });
 
