@@ -104,9 +104,29 @@ app.get('/', is_logged_handler, (req, res, next) => {
         `);
             res.end();
         });
+});
+
+app.post('/delete-note', (req, res, next) => {
+    const user = req.user;
+    const note_id_to_delete = req.body.note_id;
+
+    //Remove note from user.notes
+    const updated_notes = user.notes.filter((note_id) => {
+        return note_id != note_id_to_delete;
+    });
+    user.notes = updated_notes;
+
+    //Remove note object from database
+    user.save().then(() => {
+        note_model.findByIdAndRemove(note_id_to_delete).then(() => {
+            res.redirect('/');
+        });
+
+    });
 
 
 });
+
 
 app.post('/add-note', (req, res, next) => {
     const user = req.user;
