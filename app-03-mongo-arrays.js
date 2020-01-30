@@ -71,23 +71,35 @@ app.use((req, res, next) => {
 
 app.get('/', is_logged_handler, (req, res, next) => {
     const user = req.user;
-    res.write(`
-    <html>
-    <body>
-        Logged in as user: ${user.name}
-        <form action="/logout" method="POST">
-            <button type="submit">Log out</button>
-        </form>
-        <form action="/add-note" method="POST">
-            <input type="text" name="note">
-            <button type="submit">Add note</button>
-        </form>
-        
+    user.populate('notes')
+        .execPopulate()
+        .then(() => {
+            console.log('user:', user);
+            res.write(`
+        <html>
+        <body>
+            Logged in as user: ${user.name}
+            <form action="/logout" method="POST">
+                <button type="submit">Log out</button>
+            </form>`);
+            user.notes.forEach((note) => {
+                res.write(note.text);
+            });
 
-    </html>
-    </body>
-    `);
-    res.end();
+            res.write(`
+            <form action="/add-note" method="POST">
+                <input type="text" name="note">
+                <button type="submit">Add note</button>
+            </form>
+            
+    
+        </html>
+        </body>
+        `);
+            res.end();
+        });
+
+
 });
 
 app.post('/add-note', (req, res, next) => {
