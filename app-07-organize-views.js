@@ -68,8 +68,7 @@ app.get('/', is_logged_handler, (req, res, next) => {
                 notes: user.notes
             };
             let html = note_views.notes_view(data);
-            console.log('html:', html)
-            res.send();
+            res.send(html);
         });
 });
 
