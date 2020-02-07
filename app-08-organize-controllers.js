@@ -34,7 +34,7 @@ app.use(session({
 }));
 
 app.use((req, res, next) => {
-    console.log(`path: ${req.path}`);
+    console.log(`${req.method} ${req.path}`);
     next();
 });
 
@@ -46,20 +46,13 @@ const is_logged_handler = (req, res, next) => {
 };
 
 //Auth
+app.use(auth_controller.handle_user);
 app.get('/login', auth_controller.get_login);
+app.post('/login', auth_controller.post_login);
+app.post('/register', auth_controller.post_register);
+app.post('/logout', auth_controller.post_logout);
 
-app.use((req, res, next) => {
-    if (!req.session.user) {
-        return next();
-    }
-    user_model.findById(req.session.user._id).then((user) => {
-        req.user = user;
-        next();
-    }).catch((err) => {
-        console.log(err);
-        res.redirect('login');
-    });
-});
+
 
 app.get('/', is_logged_handler, (req, res, next) => {
     const user = req.user;
@@ -118,49 +111,6 @@ app.post('/add-note', (req, res, next) => {
     });
 });
 
-app.post('/logout', (req, res, next) => {
-    req.session.destroy();
-    res.redirect('/login');
-});
-
-//login
-
-app.post('/login', (req, res, next) => {
-    const user_name = req.body.user_name;
-    user_model.findOne({
-        name: user_name
-    }).then((user) => {
-        if (user) {
-            req.session.user = user;
-            return res.redirect('/');
-        }
-
-        res.redirect('/login');
-    });
-});
-
-app.post('/register', (req, res, next) => {
-    const user_name = req.body.user_name;
-
-    user_model.findOne({
-        name: user_name
-    }).then((user) => {
-        if (user) {
-            console.log('User name already registered');
-            return res.redirect('/login');
-        }
-
-        let new_user = new user_model({
-            name: user_name,
-            notes: []
-        });
-
-        new_user.save().then(() => {
-            return res.redirect('/login');
-        });
-
-    });
-});
 
 app.use((req, res, next) => {
     res.status(404);
