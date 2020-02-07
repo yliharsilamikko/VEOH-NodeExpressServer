@@ -39,7 +39,11 @@ const get_note = (req, res, next) => {
     note_model.findOne({
         _id: note_id
     }).then((note) => {
-        res.send(note.text);
+        let data = {
+            text: note.text
+        };
+        let html = note_views.note_view(data);
+        res.send(html);
     });
 };
 

@@ -29,4 +29,17 @@ const notes_view = ((data) => {
     return html;
 });
 
+
+const note_view = (data) => {
+    let html = `
+    <html>
+    <body>
+        Note text: ${data.text}
+    </body>
+    </html>
+    `;
+    return html;
+};
+
 module.exports.notes_view = notes_view;
+module.exports.note_view = note_view;
